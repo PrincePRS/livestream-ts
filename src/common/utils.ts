@@ -42,9 +42,11 @@ export const arrayIntersection = (a: any[], b: any[]) => {
   });
 };
 
-export const getMetadata = (metadataString: string) => {
+export const getMetadata = (metadataString: string | undefined) => {
   try {
-    return metadataString === "" ? {} : JSON.parse(metadataString);
+    return !metadataString || metadataString === ""
+      ? {}
+      : JSON.parse(metadataString);
   } catch (error) {
     return {};
   }

@@ -16,7 +16,7 @@ export const defaultPreviewPreference = {
 
 export const useUserPreferences = (
   key: string,
-  defaultPreference: Record<string, any>
+  defaultPreference?: Record<string, any>
 ) => {
   const [localStorageValue, setStorageValue] = useLocalStorage(
     key,
@@ -29,5 +29,5 @@ export const useUserPreferences = (
     setPreference(value);
     setStorageValue(value);
   };
-  return [preference, changePreference];
+  return { preference, changePreference };
 };

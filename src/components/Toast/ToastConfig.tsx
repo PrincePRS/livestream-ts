@@ -18,7 +18,7 @@ const isChatOpen = () => {
   );
 };
 
-const ChatAction: React.FC<> = React.forwardRef<HTMLButtonElement, {}>((_, ref) => {
+const ChatAction = React.forwardRef<HTMLButtonElement, {}>((_, ref) => {
   return (
     <Button
       outlined
@@ -35,13 +35,13 @@ const ChatAction: React.FC<> = React.forwardRef<HTMLButtonElement, {}>((_, ref) 
   );
 });
 
-export const ToastConfig = {
+export const ToastConfig: Record<string, any> = {
   PEER_LIST: {
     single: function (notification: Record<string, any>) {
       if (notification.data.length === 1) {
         return {
           title: `${notification.data[0]?.name} joined`,
-          icon: 
+          icon: <PersonIcon />,
         };
       }
       return {
@@ -51,7 +51,7 @@ export const ToastConfig = {
         icon: <PersonIcon />,
       };
     },
-    multiple: (notifications) => {
+    multiple: (notifications: Record<string, any>[]) => {
       return {
         title: `${notifications[0].data.name} and ${
           notifications.length - 1
@@ -61,13 +61,13 @@ export const ToastConfig = {
     },
   },
   PEER_JOINED: {
-    single: function (notification) {
+    single: function (notification: Record<string, any>) {
       return {
         title: `${notification.data?.name} joined`,
         icon: <PersonIcon />,
       };
     },
-    multiple: function (notifications) {
+    multiple: function (notifications: Record<string, any>[]) {
       return {
         title: `${notifications[notifications.length - 1].data.name} and ${
           notifications.length - 1
@@ -77,13 +77,13 @@ export const ToastConfig = {
     },
   },
   PEER_LEFT: {
-    single: function (notification) {
+    single: function (notification: Record<string, any>) {
       return {
         title: `${notification.data?.name} left`,
         icon: <PersonIcon />,
       };
     },
-    multiple: function (notifications) {
+    multiple: function (notifications: Record<string, any>[]) {
       return {
         title: `${notifications[notifications.length - 1].data.name} and ${
           notifications.length - 1
@@ -93,13 +93,13 @@ export const ToastConfig = {
     },
   },
   METADATA_UPDATED: {
-    single: (notification) => {
+    single: (notification: Record<string, any>) => {
       return {
         title: `${notification.data?.name} raised hand`,
         icon: <HandIcon />,
       };
     },
-    multiple: (notifications) => {
+    multiple: (notifications: Record<string, any>[]) => {
       return {
         title: `${notifications[notifications.length - 1].data?.name} and ${
           notifications.length - 1
@@ -109,14 +109,14 @@ export const ToastConfig = {
     },
   },
   NEW_MESSAGE: {
-    single: (notification) => {
+    single: (notification: Record<string, any>) => {
       return {
         title: `New message from ${notification.data?.senderName}`,
         icon: <ChatIcon />,
         action: isChatOpen() ? null : <ChatAction />,
       };
     },
-    multiple: (notifications) => {
+    multiple: (notifications: Record<string, any>[]) => {
       return {
         title: `${notifications.length} new messages`,
         icon: <ChatIcon />,
@@ -135,7 +135,7 @@ export const ToastConfig = {
     },
   },
   RECONNECTING: {
-    single: (message) => {
+    single: (message: string) => {
       return {
         title: `You are offline for now. while we try to reconnect, please check
         your internet connection. ${message}.

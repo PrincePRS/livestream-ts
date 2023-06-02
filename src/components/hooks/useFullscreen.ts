@@ -18,7 +18,7 @@ export const useFullscreen = () => {
       } else {
         await screenfull.request();
       }
-    } catch (err) {
+    } catch (err: any) {
       ToastManager.addToast({ title: err.message });
     }
   }, [isFullScreenEnabled]);

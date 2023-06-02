@@ -8,7 +8,7 @@ export const ToastBatcher = {
     duration,
     type,
   }: {
-    notification;
+    notification: Record<string, any>;
     duration: number;
     type: string;
   }) {
@@ -46,14 +46,22 @@ export const ToastBatcher = {
       });
     }
   },
-  showToast({ notification, duration = 3000, type }) {
+  showToast({
+    notification,
+    duration = 3000,
+    type = "",
+  }: {
+    notification: Record<string, any>;
+    duration?: number;
+    type?: string;
+  }) {
     try {
       this.showToastInternal({ notification, duration, type });
     } catch (err) {
       console.debug("Notifications", err);
     }
   },
-  syncUItoast(toastsDisplaying) {
+  syncUItoast(toastsDisplaying: Record<string, any>[]) {
     for (const [toastType, toastInfo] of this.toastsType.entries()) {
       if (!toastsDisplaying.find((toast) => toast.id === toastInfo.id)) {
         this.toastsType.delete(toastType);

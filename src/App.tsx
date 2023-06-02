@@ -57,7 +57,13 @@ document.title =
   process.env.REACT_APP_TITLE || `${appName}'s ${document.title}`;
 
 // TODO: remove now that there are options to change to portrait
-const getAspectRatio = ({ width, height }) => {
+const getAspectRatio = ({
+  width,
+  height,
+}: {
+  width: number;
+  height: number;
+}) => {
   const host = process.env.REACT_APP_HOST_NAME || window.location.hostname;
   const portraitDomains = (
     process.env.REACT_APP_PORTRAIT_MODE_DOMAINS || ""
@@ -144,7 +150,7 @@ export function EdtechComponent({
   );
 }
 
-const RedirectToPreview = ({ getDetails }) => {
+const RedirectToPreview = ({ getDetails }: { getDetails: () => void }) => {
   const { roomId, role } = useParams();
   useEffect(() => {
     getDetails();
@@ -168,7 +174,13 @@ const RedirectToPreview = ({ getDetails }) => {
   );
 };
 
-const RouteList = ({ getUserToken, getDetails }) => {
+const RouteList = ({
+  getUserToken,
+  getDetails,
+}: {
+  getUserToken: (name: string) => Promise<any>;
+  getDetails: () => void;
+}) => {
   return (
     <Routes>
       <Route path="preview">
@@ -241,7 +253,13 @@ const BackSwipe = () => {
   return null;
 };
 
-function AppRoutes({ getUserToken, getDetails }) {
+function AppRoutes({
+  getUserToken,
+  getDetails,
+}: {
+  getUserToken: (name: string) => Promise<any>;
+  getDetails: () => void;
+}) {
   return (
     <Router>
       <ToastContainer />

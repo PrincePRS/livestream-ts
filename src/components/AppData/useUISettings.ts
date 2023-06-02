@@ -30,6 +30,10 @@ export const useUISettings = (uiSettingKey: string) => {
   return uiSettings;
 };
 
+type SetValue = React.Dispatch<React.SetStateAction<any>>; // Define the type for setValue
+
+type UseSetUiSettingsResult = [any, SetValue];
+
 /**
  * fields saved related to UI settings in store's app data can be
  * accessed using this hook. key is optional if not passed
@@ -39,7 +43,9 @@ export const useUISettings = (uiSettingKey: string) => {
  * setVal(true);
  * @param {string} uiSettingKey
  */
-export const useSetUiSettings = (uiSettingKey: string) => {
+export const useSetUiSettings = (
+  uiSettingKey: string
+): UseSetUiSettingsResult => {
   const value = useUISettings(uiSettingKey);
   const setValue = useSetAppData({
     key1: APP_DATA.uiSettings,
@@ -85,7 +91,7 @@ export const usePinnedTrack = () => {
   return useHMSStore(selectTrackByID(pinnedTrackId));
 };
 
-export const useSubscribedNotifications = (notificationKey: string) => {
+export const useSubscribedNotifications = (notificationKey: string = "") => {
   const notificationPreference = useHMSStore(
     selectAppDataByPath(APP_DATA.subscribedNotifications, notificationKey)
   );
@@ -108,7 +114,9 @@ export const useSubscribeChatSelector = (chatSelectorKey: string) => {
   return chatSelectorPreference;
 };
 
-export const useSetSubscribedChatSelector = (chatSelectorKey: string) => {
+export const useSetSubscribedChatSelector = (
+  chatSelectorKey: string
+): UseSetUiSettingsResult => {
   const value = useSubscribeChatSelector(chatSelectorKey);
   const setValue = useSetAppData({
     key1: APP_DATA.chatSelector,
@@ -117,7 +125,9 @@ export const useSetSubscribedChatSelector = (chatSelectorKey: string) => {
   return [value, setValue];
 };
 
-export const useSetAppDataByKey = (appDataKey: string) => {
+export const useSetAppDataByKey = (
+  appDataKey: string
+): UseSetUiSettingsResult => {
   const value = useHMSStore(selectAppData(appDataKey));
   const actions = useHMSActions();
   const setValue = useCallback(
@@ -132,7 +142,7 @@ export const useSetAppDataByKey = (appDataKey: string) => {
 const useSetAppData = ({ key1, key2 }: { key1: string; key2: string }) => {
   const actions = useHMSActions();
   const store = useHMSVanillaStore();
-  const [, setPreferences] = useUserPreferences(
+  const { preference, changePreference } = useUserPreferences(
     UserPreferencesKeys.UI_SETTINGS
   );
   const setValue = useCallback(
@@ -150,12 +160,12 @@ const useSetAppData = ({ key1, key2 }: { key1: string; key2: string }) => {
         true
       );
       const appData = store.getState(selectAppData());
-      setPreferences({
+      changePreference({
         ...appData.uiSettings,
         subscribedNotifications: appData.subscribedNotifications,
       });
     },
-    [actions, key1, key2, store, setPreferences]
+    [actions, key1, key2, store, changePreference]
   );
   return setValue;
 };

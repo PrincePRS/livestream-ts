@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { selectIsConnectedToRoom, useHMSStore } from "@100mslive/react-sdk";
 import { Toast as ToastPrimitive } from "@100mslive/react-ui";
-import { Toast } from "./Toast";
+import { Toast, ToastDataProps } from "./Toast";
 import { ToastManager } from "./ToastManager";
 import { MAX_TOASTS } from "../../common/constants";
 
 export const ToastContainer = () => {
   const isConnected = useHMSStore(selectIsConnectedToRoom);
-  const [toasts, setToast] = useState([]);
+  const [toasts, setToast] = useState<ToastDataProps[]>([]);
   useEffect(() => {
     ToastManager.addListener(setToast);
     return () => {
@@ -16,12 +16,14 @@ export const ToastContainer = () => {
   }, []);
   return (
     <ToastPrimitive.Provider swipeDirection="left" duration={3000}>
-      {toasts.slice(0, MAX_TOASTS).map(toast => {
+      {toasts.slice(0, MAX_TOASTS).map((toast) => {
         return (
           <Toast
             key={toast.id}
             {...toast}
-            onOpenChange={value => !value && ToastManager.removeToast(toast.id)}
+            onOpenChange={(value) =>
+              !value && ToastManager.removeToast(toast.id)
+            }
           />
         );
       })}
