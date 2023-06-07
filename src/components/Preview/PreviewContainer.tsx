@@ -3,12 +3,12 @@ import { flexCenter, styled } from "@100mslive/react-ui";
 import PreviewJoin from "./PreviewJoin";
 
 interface PreviewContainerProps {
-  token;
-  onJoin;
-  env;
-  skipPreview;
-  initialName;
-  asRole;
+  token: string;
+  onJoin: () => void;
+  env: string;
+  skipPreview: boolean;
+  initialName: string;
+  asRole: string;
 }
 
 const PreviewContainer: React.FC<PreviewContainerProps> = ({

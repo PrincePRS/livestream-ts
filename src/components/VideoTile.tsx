@@ -31,9 +31,13 @@ import { UI_SETTINGS } from "../common/constants";
 interface TileProps {
   peerId?: string;
   trackId?: string;
-  width?: number;
-  height?: number;
+  width?: string;
+  height?: string;
   visible?: boolean;
+  objectFit?: string;
+  rootCSS?: Record<string, any>;
+  containerCSS?: Record<string, any>;
+  showStatsOnTiles?: Record<string, any>;
 }
 
 const Tile: React.FC<TileProps> = ({
@@ -41,6 +45,8 @@ const Tile: React.FC<TileProps> = ({
   trackId,
   width,
   height,
+  rootCSS,
+  containerCSS,
   visible = true,
 }) => {
   const trackSelector = trackId
@@ -147,7 +153,7 @@ const Tile: React.FC<TileProps> = ({
             name={label}
             isTile
             peerId={peerId}
-            width={width}
+            width={Number(width)}
           />
         </StyledVideoTile.Container>
       ) : null}

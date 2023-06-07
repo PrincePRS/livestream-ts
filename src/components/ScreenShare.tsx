@@ -10,7 +10,7 @@ import { useUISettings } from "./AppData/useUISettings";
 import { isScreenshareSupported } from "../common/utils";
 import { UI_SETTINGS } from "../common/constants";
 
-export const ScreenshareToggle = ({ css }: { css: Record<string, any> }) => {
+export const ScreenshareToggle = ({ css }: { css?: Record<string, any> }) => {
   const isAllowedToPublish = useHMSStore(selectIsAllowedToPublish);
   const isAudioOnly = useUISettings(UI_SETTINGS.isAudioOnly);
   const {

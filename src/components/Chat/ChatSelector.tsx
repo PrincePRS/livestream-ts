@@ -2,6 +2,7 @@ import React, { Fragment, useMemo, useState } from "react";
 import { useMeasure } from "react-use";
 import { FixedSizeList } from "react-window";
 import {
+  HMSPeer,
   selectMessagesUnreadCountByPeerID,
   selectMessagesUnreadCountByRole,
   selectRemotePeers,
@@ -26,7 +27,12 @@ const ChatDotIcon = () => {
   );
 };
 
-const SelectorItem = ({ value, active, onClick, unreadCount }) => {
+const SelectorItem: React.FC<{
+  value: string;
+  active: boolean;
+  onClick: (e: any) => void;
+  unreadCount?: number;
+}> = ({ value, active, onClick, unreadCount }) => {
   return (
     <Dropdown.Item
       data-testid="chat_members"
@@ -35,7 +41,7 @@ const SelectorItem = ({ value, active, onClick, unreadCount }) => {
     >
       <Text variant="sm">{value}</Text>
       <Flex align="center" css={{ ml: "auto", color: "$textPrimary" }}>
-        {unreadCount > 0 && (
+        {unreadCount && unreadCount > 0 && (
           <Tooltip title={`${unreadCount} unread`}>
             <Box css={{ mr: active ? "$3" : 0 }}>
               <ChatDotIcon />
@@ -48,18 +54,23 @@ const SelectorItem = ({ value, active, onClick, unreadCount }) => {
   );
 };
 
-const SelectorHeader = React.memo(({ children }) => {
-  return (
-    <Box css={{ flexShrink: 0 }}>
-      <HorizontalDivider space={4} />
-      <Text variant="md" css={{ p: "$4 $10", fontWeight: "$semiBold" }}>
-        {children}
-      </Text>
-    </Box>
-  );
-});
+const SelectorHeader: React.FC<{ children: React.ReactNode }> = React.memo(
+  ({ children }) => {
+    return (
+      <Box css={{ flexShrink: 0 }}>
+        <HorizontalDivider space={4} />
+        <Text variant="md" css={{ p: "$4 $10", fontWeight: "$semiBold" }}>
+          {children}
+        </Text>
+      </Box>
+    );
+  }
+);
 
-const Everyone = React.memo(({ onSelect, active }) => {
+const Everyone: React.FC<{
+  onSelect: (value: Record<string, any>) => void;
+  active: boolean;
+}> = React.memo(({ onSelect, active }) => {
   const unreadCount = useHMSStore(selectUnreadHMSMessagesCount);
   return (
     <SelectorItem
@@ -73,7 +84,11 @@ const Everyone = React.memo(({ onSelect, active }) => {
   );
 });
 
-const RoleItem = React.memo(({ onSelect, role, active }) => {
+const RoleItem: React.FC<{
+  onSelect: (value: Record<string, any>) => void;
+  role: string;
+  active: boolean;
+}> = React.memo(({ onSelect, role, active }) => {
   const unreadCount = useHMSStore(selectMessagesUnreadCountByRole(role));
   return (
     <SelectorItem
@@ -87,7 +102,12 @@ const RoleItem = React.memo(({ onSelect, role, active }) => {
   );
 });
 
-const PeerItem = ({ onSelect, peerId, name, active }) => {
+const PeerItem: React.FC<{
+  onSelect: (value: Record<string, any>) => void;
+  peerId: string;
+  name: string;
+  active: boolean;
+}> = ({ onSelect, peerId, name, active }) => {
   const unreadCount = useHMSStore(selectMessagesUnreadCountByPeerID(peerId));
   return (
     <SelectorItem
@@ -101,20 +121,20 @@ const PeerItem = ({ onSelect, peerId, name, active }) => {
   );
 };
 
-const VirtualizedSelectItemList = ({
-  peers,
-  selectedRole,
-  selectedPeerId,
-  searchValue,
-  onSelect,
-}) => {
-  const [ref, { width, height }] = useMeasure();
+const VirtualizedSelectItemList: React.FC<{
+  peers: HMSPeer[];
+  selectedRole: string;
+  selectedPeerId: string;
+  searchValue: string;
+  onSelect: (value: Record<string, any>) => void;
+}> = ({ peers, selectedRole, selectedPeerId, searchValue, onSelect }) => {
+  const [ref, { width, height }] = useMeasure<HTMLDivElement>();
   const roles = useFilteredRoles();
   const filteredPeers = useMemo(
     () =>
       peers.filter(
         // search should be empty or search phrase should be included in name
-        peer =>
+        (peer) =>
           !searchValue ||
           peer.name.toLowerCase().includes(searchValue.toLowerCase())
       ),
@@ -131,7 +151,7 @@ const VirtualizedSelectItemList = ({
 
     roles.length > 0 &&
       selectItems.push(<SelectorHeader>Roles</SelectorHeader>);
-    roles.forEach(userRole =>
+    roles.forEach((userRole) =>
       selectItems.push(
         <RoleItem
           key={userRole}
@@ -144,7 +164,7 @@ const VirtualizedSelectItemList = ({
 
     filteredPeers.length > 0 &&
       selectItems.push(<SelectorHeader>Participants</SelectorHeader>);
-    filteredPeers.forEach(peer =>
+    filteredPeers.forEach((peer) =>
       selectItems.push(
         <PeerItem
           key={peer.id}
@@ -177,7 +197,11 @@ const VirtualizedSelectItemList = ({
   );
 };
 
-export const ChatSelector = ({ role, peerId, onSelect }) => {
+export const ChatSelector: React.FC<{
+  role: string;
+  peerId: string;
+  onSelect: (value: Record<string, any>) => void;
+}> = ({ role, peerId, onSelect }) => {
   const peers = useHMSStore(selectRemotePeers);
   const [search, setSearch] = useState("");
 

@@ -21,25 +21,27 @@ export const MainGridView = () => {
   const peers = useHMSStore(selectPeers);
   const roles = useHMSStore(selectRolesMap);
   const localPeerId = useHMSStore(selectLocalPeerID);
-  const centerPeers = peers.filter(peer => centerRoles.includes(peer.roleName));
-  const sidebarPeers = peers.filter(peer =>
+  const centerPeers = peers.filter((peer) =>
+    centerRoles.includes(peer.roleName)
+  );
+  const sidebarPeers = peers.filter((peer) =>
     sidepaneRoles.includes(peer.roleName)
   );
   const localRole = useHMSStore(selectLocalPeerRole);
   const peersByRoles = useHMSStore(
-    selectPeersByRoles(localRole.subscribeParams.subscribeToRoles || [])
+    selectPeersByRoles(localRole?.subscribeParams.subscribeToRoles || [])
   );
   const [placeholder, setPlaceholder] = useState("");
 
   useEffect(() => {
-    const hasPublishingPeers = peers.some(peer => {
+    const hasPublishingPeers = peers.some((peer) => {
       // peer able to publish
       if (peer.roleName && roles[peer.roleName]) {
         return !!roles[peer.roleName].publishParams?.allowed.length;
       }
       return true;
     });
-    const hasSubscribedRolePublishing = peersByRoles.some(peer => {
+    const hasSubscribedRolePublishing = peersByRoles.some((peer) => {
       if (peer.roleName && roles[peer.roleName]) {
         return !!roles[peer.roleName].publishParams?.allowed.length;
       }
@@ -47,7 +49,7 @@ export const MainGridView = () => {
     });
     if (!hasPublishingPeers) {
       setPlaceholder("None of the roles can publish video, audio or screen");
-    } else if (!localRole.subscribeParams.subscribeToRoles?.length) {
+    } else if (!localRole?.subscribeParams.subscribeToRoles?.length) {
       setPlaceholder("This role isn't subscribed to any role");
     } else if (!hasSubscribedRolePublishing) {
       setPlaceholder("This role subscribed to roles is not publishing");
@@ -55,7 +57,7 @@ export const MainGridView = () => {
       setPlaceholder("");
     }
   }, [
-    localRole.subscribeParams.subscribeToRoles?.length,
+    localRole?.subscribeParams.subscribeToRoles?.length,
     peers,
     peersByRoles,
     roles,

@@ -5,7 +5,7 @@ import { Box, config as cssConfig, Flex } from "@100mslive/react-ui";
 import { SidePane } from "./screenShareView";
 import { Whiteboard } from "../plugins/whiteboard";
 
-const Editor = React.memo(({ roomId }) => {
+const Editor: React.FC<{ roomId: string }> = React.memo(({ roomId }) => {
   return (
     <Box
       css={{

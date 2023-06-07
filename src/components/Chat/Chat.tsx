@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+  HMSMessage,
   HMSNotificationTypes,
   selectHMSMessagesCount,
   selectPeerNameByID,
@@ -18,10 +19,11 @@ import { useSetSubscribedChatSelector } from "../AppData/useUISettings";
 import { useSetPinnedMessage } from "../hooks/useSetPinnedMessage";
 import { useUnreadCount } from "./useUnreadCount";
 import { CHAT_SELECTOR, SESSION_STORE_KEY } from "../../common/constants";
+import { VariableSizeList } from "react-window";
 
-const PinnedMessage: React.FC<{ clearPinnedMessage: () => void }> = ({
-  clearPinnedMessage,
-}) => {
+const PinnedMessage: React.FC<{
+  clearPinnedMessage: (message: HMSMessage | undefined) => Promise<void>;
+}> = ({ clearPinnedMessage }) => {
   const permissions = useHMSStore(selectPermissions);
   const pinnedMessage = useHMSStore(
     selectSessionStore(SESSION_STORE_KEY.PINNED_MESSAGE)
@@ -49,11 +51,11 @@ const PinnedMessage: React.FC<{ clearPinnedMessage: () => void }> = ({
           <AnnotisedMessage message={pinnedMessage} />
         </Text>
       </Box>
-      {permissions?.removeOthers && (
+      {/* {permissions?.removeOthers && (
         <IconButton onClick={() => clearPinnedMessage()}>
           <CrossIcon />
         </IconButton>
-      )}
+      )} */}
     </Flex>
   ) : null;
 };
@@ -77,7 +79,7 @@ export const Chat = () => {
       : "Everyone",
   });
   const [isSelectorOpen, setSelectorOpen] = useState(false);
-  const listRef = useRef(null);
+  const listRef = useRef<VariableSizeList>(null);
   const hmsActions = useHMSActions();
   const { setPinnedMessage } = useSetPinnedMessage();
   useEffect(() => {
@@ -116,7 +118,7 @@ export const Chat = () => {
       <ChatHeader
         selectorOpen={isSelectorOpen}
         selection={chatOptions.selection}
-        onSelect={({ role, peerId, selection }) => {
+        onSelect={({ role, peerId, selection }: Record<string, any>) => {
           setChatOptions({
             role,
             peerId,

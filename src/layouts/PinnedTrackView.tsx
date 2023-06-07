@@ -15,13 +15,13 @@ const PinnedPeerView = () => {
   // can be audio or video track, if tile with only audio track is pinned
   const pinnedTrack = usePinnedTrack();
   const peerVideoTrack = useHMSStore(
-    selectVideoTrackByPeerID(pinnedTrack.peerId)
+    selectVideoTrackByPeerID(pinnedTrack?.peerId)
   );
   const pinnedVideoTrack =
     pinnedTrack && pinnedTrack.type === "audio" ? peerVideoTrack : pinnedTrack;
-  const [ref, { height, width }] = useMeasure();
+  const [ref, { height, width }] = useMeasure<HTMLDivElement>();
   const peers = (useHMSStore(selectPeers) || []).filter(
-    peer =>
+    (peer) =>
       peer.videoTrack || peer.audioTrack || peer.auxiliaryTracks.length > 0
   );
   if (peers.length === 0) {
@@ -51,16 +51,16 @@ const PinnedPeerView = () => {
         ref={ref}
       >
         <VideoTile
-          key={pinnedTrack.id}
+          key={pinnedTrack?.id}
           trackId={pinnedVideoTrack?.id}
-          peerId={pinnedTrack.peerId}
-          height={finalHeight}
-          width={finalWidth}
+          peerId={pinnedTrack?.peerId}
+          height={finalHeight.toString()}
+          width={finalWidth.toString()}
         />
       </Flex>
       {showSidePane && (
         <GridSidePaneView
-          peers={peers.filter(peer => peer.id !== pinnedTrack.peerId)}
+          peers={peers.filter((peer) => peer.id !== pinnedTrack.peerId)}
         />
       )}
     </Flex>

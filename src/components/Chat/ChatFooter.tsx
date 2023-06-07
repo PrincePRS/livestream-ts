@@ -22,7 +22,7 @@ const TextArea = styled("textarea", {
   },
 });
 
-function EmojiPicker({ onSelect }) {
+function EmojiPicker({ onSelect }: { onSelect: any }) {
   const [showEmoji, setShowEmoji] = useState(false);
   const ref = useEmojiPickerStyles(showEmoji);
   return (
@@ -61,13 +61,18 @@ function EmojiPicker({ onSelect }) {
   );
 }
 
-export const ChatFooter = ({ role, peerId, onSend, children }) => {
+export const ChatFooter: React.FC<{
+  role: string;
+  peerId: string;
+  onSend: () => void;
+  children: React.ReactNode;
+}> = ({ role, peerId, onSend, children }) => {
   const hmsActions = useHMSActions();
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const [draftMessage, setDraftMessage] = useChatDraftMessage();
 
   const sendMessage = useCallback(async () => {
-    const message = inputRef.current.value;
+    const message = inputRef?.current?.value;
     if (!message || !message.trim().length) {
       return;
     }
@@ -83,7 +88,7 @@ export const ChatFooter = ({ role, peerId, onSend, children }) => {
       setTimeout(() => {
         onSend();
       }, 0);
-    } catch (error) {
+    } catch (error: any) {
       ToastManager.addToast({ title: error.message });
     }
   }, [role, peerId, hmsActions, onSend]);
@@ -120,7 +125,7 @@ export const ChatFooter = ({ role, peerId, onSend, children }) => {
         placeholder="Write something here"
         ref={inputRef}
         autoFocus
-        onKeyPress={async event => {
+        onKeyPress={async (event) => {
           if (event.key === "Enter") {
             if (!event.shiftKey) {
               event.preventDefault();
@@ -130,13 +135,13 @@ export const ChatFooter = ({ role, peerId, onSend, children }) => {
         }}
         autoComplete="off"
         aria-autocomplete="none"
-        onPaste={e => e.stopPropagation()}
-        onCut={e => e.stopPropagation()}
-        onCopy={e => e.stopPropagation()}
+        onPaste={(e) => e.stopPropagation()}
+        onCut={(e) => e.stopPropagation()}
+        onCopy={(e) => e.stopPropagation()}
       />
       <EmojiPicker
-        onSelect={emoji => {
-          inputRef.current.value += ` ${emoji.native} `;
+        onSelect={(emoji: any) => {
+          if (inputRef?.current) inputRef.current.value += ` ${emoji.native} `;
         }}
       />
       <IconButton

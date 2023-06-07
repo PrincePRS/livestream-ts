@@ -21,7 +21,7 @@ import {
   useTheme,
   Video,
 } from "@100mslive/react-ui";
-import IconButton from "../../IconButton";
+import IconButton from "../IconButton";
 import { AudioVideoToggle } from "../AudioVideoToggle";
 import TileConnection from "../Connection/TileConnection";
 import SettingsModal from "../Settings/SettingsModal";
@@ -35,19 +35,20 @@ import {
 } from "../hooks/useUserPreferences";
 import { UI_SETTINGS } from "../../common/constants";
 
-const PreviewJoin = ({
-  token,
-  onJoin,
-  env,
-  skipPreview,
-  initialName,
-  asRole,
-}) => {
-  const [previewPreference, setPreviewPreference] = useUserPreferences(
-    UserPreferencesKeys.PREVIEW,
-    defaultPreviewPreference
-  );
-  const [name, setName] = useState(initialName || previewPreference.name);
+const PreviewJoin: React.FC<{
+  token: string;
+  onJoin: () => void;
+  env: string;
+  skipPreview: boolean;
+  initialName: string;
+  asRole: string;
+}> = ({ token, onJoin, env, skipPreview, initialName, asRole }) => {
+  // const [previewPreference, setPreviewPreference] = useUserPreferences(
+  const {
+    preference: previewPreference,
+    changePreference: setPreviewPreference,
+  } = useUserPreferences(UserPreferencesKeys.PREVIEW, defaultPreviewPreference);
+  const [name, setName] = useState(initialName || previewPreference?.name);
   const { isLocalAudioEnabled, isLocalVideoEnabled } = useAVToggle();
   const [previewError, setPreviewError] = useState(false);
   const { enableJoin, preview, join } = usePreviewJoin({
@@ -55,8 +56,8 @@ const PreviewJoin = ({
     token,
     initEndpoint: env ? `https://${env}-init.100ms.live/init` : undefined,
     initialSettings: {
-      isAudioMuted: skipPreview || previewPreference.isAudioMuted,
-      isVideoMuted: skipPreview || previewPreference.isVideoMuted,
+      isAudioMuted: skipPreview || previewPreference?.isAudioMuted,
+      isVideoMuted: skipPreview || previewPreference?.isVideoMuted,
       speakerAutoSelectionBlacklist: ["Yeti Stereo Microphone"],
     },
     captureNetworkQualityInPreview: true,
@@ -114,8 +115,8 @@ const PreviewJoin = ({
       >
         <PreviewTile name={name} error={previewError} />
         <PreviewControls
-          enableJoin={enableJoin}
-          savePreferenceAndJoin={savePreferenceAndJoin}
+        // enableJoin={enableJoin}
+        // savePreferenceAndJoin={savePreferenceAndJoin}
         />
         <PreviewName
           name={name}
@@ -135,7 +136,10 @@ const Container = styled("div", {
   px: "$10",
 });
 
-const PreviewTile = ({ name, error }) => {
+const PreviewTile: React.FC<{ name: string; error: boolean }> = ({
+  name,
+  error,
+}) => {
   const localPeer = useHMSStore(selectLocalPeer);
   const borderAudioRef = useBorderAudioLevel(localPeer?.audioTrack);
   const isVideoOn = useHMSStore(selectIsLocalVideoEnabled);
@@ -196,7 +200,7 @@ const PreviewControls = () => {
       }}
     >
       <Flex css={{ gap: "$4" }}>
-        <AudioVideoToggle compact />
+        <AudioVideoToggle />
         <VirtualBackground />
       </Flex>
       <PreviewSettings />
@@ -210,7 +214,7 @@ const PreviewSettings = React.memo(() => {
     <Fragment>
       <IconButton
         data-testid="preview_setting_btn"
-        onClick={() => setOpen(value => !value)}
+        onClick={() => setOpen((value) => !value)}
       >
         <SettingsIcon />
       </IconButton>

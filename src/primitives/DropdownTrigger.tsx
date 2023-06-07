@@ -8,8 +8,8 @@ const DialogDropdownTrigger = React.forwardRef<
     title: string;
     css: Record<string, any>;
     open: boolean;
-    icon: JSX.Element;
-    titleCSS: Record<string, any>;
+    icon?: JSX.Element;
+    titleCSS?: Record<string, any>;
   }
 >(
   (

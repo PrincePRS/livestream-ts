@@ -8,11 +8,12 @@ import {
 } from "react-router-dom";
 import {
   HMSRoomProvider,
+  HMSStats,
   selectIsConnectedToRoom,
   useHMSActions,
   useHMSStore,
 } from "@100mslive/react-sdk";
-import { Box, HMSThemeProvider } from "@100mslive/react-ui";
+import { Box, HMSThemeProvider, ThemeTypes } from "@100mslive/react-ui";
 import { AppData } from "./components/AppData/AppData";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import ErrorPage from "./components/ErrorPage";
@@ -22,10 +23,10 @@ import { KeyboardHandler } from "./components/Input/KeyboardInputManager";
 import { Notifications } from "./components/Notifications";
 import PostLeave from "./components/PostLeave";
 import { ToastContainer } from "./components/Toast/ToastContainer";
-import { hmsActions, hmsNotifications, hmsStats, hmsStore } from "./hms.js";
+import { hmsActions, hmsNotifications, hmsStats, hmsStore } from "./hms";
 import { Confetti } from "./plugins/confetti";
 import { RemoteStopScreenshare } from "./plugins/RemoteStopScreenshare";
-import { getRoutePrefix, shadeColor } from "./common/utils";
+import { getRoutePrefix } from "./common/utils";
 import { FeatureFlags } from "./services/FeatureFlags";
 import {
   getBackendEndpoint,
@@ -81,7 +82,7 @@ export function EdtechComponent({
     aspectRatio = "1-1",
     font = "Roboto",
     color = "#2F80FF",
-    theme = "dark",
+    theme = ThemeTypes.dark,
     logo = "",
     headerPresent = "false",
     metadata = "",
@@ -102,31 +103,31 @@ export function EdtechComponent({
       <HMSThemeProvider
         themeType={theme}
         aspectRatio={getAspectRatio({ width, height })}
-        theme={{
-          colors: {
-            brandDefault: color,
-            brandDark: shadeColor(color, -30),
-            brandLight: shadeColor(color, 30),
-            brandDisabled: shadeColor(color, 10),
-          },
-          fonts: {
-            sans: [font, "Inter", "sans-serif"],
-          },
-        }}
+        // theme={{
+        //   colors: {
+        //     brandDefault: color,
+        //     brandDark: shadeColor(color, -30),
+        //     brandLight: shadeColor(color, 30),
+        //     brandDisabled: shadeColor(color, 10),
+        //   },
+        //   fonts: {
+        //     sans: [font, "Inter", "sans-serif"],
+        //   },
+        // }}
       >
         <HMSRoomProvider
           isHMSStatsOn={FeatureFlags.enableStatsForNerds}
           actions={hmsActions}
           store={hmsStore}
           notifications={hmsNotifications}
-          stats={hmsStats}
+          stats={hmsStats as HMSStats}
         >
           <AppData
             appDetails={metadata}
             policyConfig={policyConfig}
             recordingUrl={recordingUrl}
             logo={logo}
-            tokenEndpoint={tokenEndpoint}
+            tokenEndpoint={tokenEndpoint ?? ""}
           />
 
           <Init />
@@ -291,7 +292,7 @@ export default function App() {
     <EdtechComponent
       themeConfig={{
         aspectRatio: process.env.REACT_APP_TILE_SHAPE,
-        theme: process.env.REACT_APP_THEME,
+        theme: process.env.REACT_APP_THEME as ThemeTypes,
         color: process.env.REACT_APP_COLOR,
         logo: process.env.REACT_APP_LOGO,
         font: process.env.REACT_APP_FONT,

@@ -107,7 +107,7 @@ const PreviewScreen = React.memo(
           justify="center"
           align="center"
         >
-          {token ? (
+          {token && env && previewAsRole ? (
             <PreviewContainer
               initialName={initialName}
               skipPreview={skipPreview}

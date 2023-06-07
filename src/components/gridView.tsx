@@ -19,7 +19,10 @@ const webinarInfoLink = webinarProps?.LINK_HREF || "https://100ms.live/";
 
 interface GridCenterViewProps {
   peers: HMSPeer[];
-  maxTileCount?: number;
+  maxTileCount?: any;
+  allowRemoteMute?: boolean;
+  hideSidePane?: boolean;
+  totalPeers?: number;
 }
 
 // The center of the screen shows bigger tiles

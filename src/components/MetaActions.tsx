@@ -1,7 +1,7 @@
 import { selectIsConnectedToRoom, useHMSStore } from "@100mslive/react-sdk";
 import { BrbIcon, HandIcon } from "@100mslive/react-icons";
 import { Flex, Tooltip } from "@100mslive/react-ui";
-import IconButton from "../IconButton";
+import IconButton from "./IconButton";
 import { useMyMetadata } from "./hooks/useMetadata";
 
 const MetaActions = ({ isMobile = false, compact = false }) => {

@@ -100,7 +100,7 @@ const TileMenu: React.FC<TileMenuProps> = ({
           <StyledMenuTile.ItemButton
             onClick={() =>
               isTilePinned
-                ? setPinnedTrackId()
+                ? setPinnedTrackId("")
                 : setPinnedTrackId(videoTrackID || audioTrackID)
             }
           >
@@ -157,7 +157,7 @@ const TileMenu: React.FC<TileMenuProps> = ({
               <StyledMenuTile.ItemButton
                 onClick={() =>
                   isTilePinned
-                    ? setPinnedTrackId()
+                    ? setPinnedTrackId("")
                     : setPinnedTrackId(videoTrackID || audioTrackID)
                 }
               >

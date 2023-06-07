@@ -41,7 +41,7 @@ export const WaitingView = React.memo(() => {
             Please wait
           </Text>
           <Text
-            color="$textMedEmp"
+            // color="$textMedEmp"
             css={{ mt: "$4", "@md": { fontSize: "$sm" } }}
           >
             Sit back and relax till others let you join.

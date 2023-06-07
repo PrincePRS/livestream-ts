@@ -103,7 +103,7 @@ interface RequestDialogProps {
   Icon?: React.ReactNode;
   actionText?: string;
   onAction?: (e: any) => void;
-  onOpenChange: (open: boolean) => void;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const RequestDialog: React.FC<RequestDialogProps> = ({
@@ -216,7 +216,6 @@ interface DialogSelectProps {
   keyField: string;
   labelField?: string;
   onChange: (value: string) => void;
-  onOpenChange: (open: boolean) => void;
 }
 
 /**
@@ -267,7 +266,7 @@ interface DialogInputProps {
   disabled?: boolean;
   type?: string;
   onChange?: (value: string) => void;
-  onOpenChange: (open: boolean) => void;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const DialogInput: React.FC<DialogInputProps> = ({

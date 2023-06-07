@@ -1,6 +1,7 @@
 import React, { Fragment, useCallback, useMemo } from "react";
 import { useMedia } from "react-use";
 import {
+  HMSPeer,
   selectLocalPeerID,
   selectLocalPeerRoleName,
   selectPeers,
@@ -23,7 +24,9 @@ const ScreenShareView = () => {
   const peers = useHMSStore(selectPeers);
   const localPeerID = useHMSStore(selectLocalPeerID);
   const localPeerRole = useHMSStore(selectLocalPeerRoleName);
-  const peerPresenting = useHMSStore(selectPeerScreenSharing);
+  const peerPresenting: HMSPeer | undefined = useHMSStore(
+    selectPeerScreenSharing
+  );
   const peerSharingPlaylist = useHMSStore(selectPeerSharingVideoPlaylist);
   const isPresenterFromMyRole =
     peerPresenting?.roleName?.toLowerCase() === localPeerRole?.toLowerCase();
@@ -32,7 +35,9 @@ const ScreenShareView = () => {
     showSidebarInBottom || amIPresenting || isPresenterFromMyRole;
 
   const smallTilePeers = useMemo(() => {
-    const smallTilePeers = peers.filter(peer => peer.id !== peerPresenting?.id);
+    const smallTilePeers = peers.filter(
+      (peer) => peer.id !== peerPresenting?.id
+    );
     if (showPresenterInSmallTile && peerPresenting) {
       smallTilePeers.unshift(peerPresenting); // put presenter on first page
     }
@@ -49,7 +54,7 @@ const ScreenShareView = () => {
       <ScreenShareComponent
         amIPresenting={amIPresenting}
         peerPresenting={peerPresenting}
-        peerSharingPlaylist={peerSharingPlaylist}
+        peerSharingPlaylist={peerSharingPlaylist!}
       />
       <Flex
         direction={{ "@initial": "column", "@lg": "row" }}
@@ -76,7 +81,13 @@ const ScreenShareView = () => {
 
 // Sidepane will show the camera stream of the main peer who is screensharing
 // and both camera + screen(if applicable) of others
-export const SidePane = ({
+export const SidePane: React.FC<{
+  isPresenterInSmallTiles: boolean;
+  peerScreenSharing?: HMSPeer; // the peer who is screensharing
+  smallTilePeers: HMSPeer[];
+  totalPeers?: number;
+  showSidebarInBottom: boolean;
+}> = ({
   isPresenterInSmallTiles,
   peerScreenSharing, // the peer who is screensharing
   smallTilePeers,
@@ -85,13 +96,14 @@ export const SidePane = ({
 }) => {
   // The main peer's screenshare is already being shown in center view
   const shouldShowScreenFn = useCallback(
-    peer => peerScreenSharing && peer.id !== peerScreenSharing.id,
+    (peer: HMSPeer) =>
+      (peerScreenSharing && peer.id !== peerScreenSharing.id) ?? false,
     [peerScreenSharing]
   );
   return (
     <Fragment>
       {!isPresenterInSmallTiles && (
-        <LargeTilePeerView peerScreenSharing={peerScreenSharing} />
+        <LargeTilePeerView peerScreenSharing={peerScreenSharing!} />
       )}
       <SmallTilePeersView
         showSidebarInBottom={showSidebarInBottom}
@@ -102,11 +114,11 @@ export const SidePane = ({
   );
 };
 
-const ScreenShareComponent = ({
-  amIPresenting,
-  peerPresenting,
-  peerSharingPlaylist,
-}) => {
+const ScreenShareComponent: React.FC<{
+  amIPresenting: boolean;
+  peerPresenting?: HMSPeer;
+  peerSharingPlaylist: HMSPeer;
+}> = ({ amIPresenting, peerPresenting, peerSharingPlaylist }) => {
   const screenshareTrack = useHMSStore(
     selectScreenShareByPeerID(peerPresenting?.id)
   );
@@ -140,7 +152,7 @@ const ScreenShareComponent = ({
       {peerPresenting &&
         (amIPresenting &&
         !["browser", "window", "application"].includes(
-          screenshareTrack?.displaySurface
+          screenshareTrack?.displaySurface ?? ""
         ) ? (
           <Box css={{ objectFit: "contain", h: "100%" }}>
             <ScreenshareDisplay />
@@ -152,7 +164,12 @@ const ScreenShareComponent = ({
   );
 };
 
-const SmallTilePeersView = ({
+const SmallTilePeersView: React.FC<{
+  smallTilePeers: HMSPeer[];
+  shouldShowScreenFn?: (peer: HMSPeer) => boolean;
+  showStatsOnTiles?: any;
+  showSidebarInBottom: boolean;
+}> = ({
   smallTilePeers,
   shouldShowScreenFn,
   showStatsOnTiles,
@@ -170,14 +187,16 @@ const SmallTilePeersView = ({
           maxColCount={showSidebarInBottom ? undefined : 2}
           maxRowCount={showSidebarInBottom ? 1 : undefined}
           includeScreenShareForPeer={shouldShowScreenFn}
-          showStatsOnTiles={showStatsOnTiles}
         />
       )}
     </Flex>
   );
 };
 
-const LargeTilePeerView = ({ peerScreenSharing, showStatsOnTiles }) => {
+const LargeTilePeerView: React.FC<{
+  peerScreenSharing: HMSPeer;
+  showStatsOnTiles?: Record<string, any>;
+}> = ({ peerScreenSharing, showStatsOnTiles }) => {
   return peerScreenSharing ? (
     <Box
       css={{

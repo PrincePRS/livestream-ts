@@ -19,7 +19,7 @@ export const ChatToggle = () => {
   const isFeatureEnabled = useIsFeatureEnabled(FEATURE_LIST.CHAT);
 
   if (!isFeatureEnabled) {
-    return;
+    return <></>;
   }
 
   return (

@@ -22,7 +22,15 @@ import { useScreenshareAudio } from "../hooks/useScreenshareAudio";
 import { UI_SETTINGS } from "../../common/constants";
 
 export const getRecordingText = (
-  { isBrowserRecordingOn, isServerRecordingOn, isHLSRecordingOn },
+  {
+    isBrowserRecordingOn,
+    isServerRecordingOn,
+    isHLSRecordingOn,
+  }: {
+    isBrowserRecordingOn: boolean;
+    isServerRecordingOn: boolean;
+    isHLSRecordingOn: boolean;
+  },
   delimiter = ", "
 ) => {
   if (!isBrowserRecordingOn && !isServerRecordingOn && !isHLSRecordingOn) {
@@ -144,11 +152,11 @@ export const AdditionalRoomState = () => {
             <Text variant="sm" css={{ ml: "$2", flex: "1 1 0" }}>
               Playlist is playing
             </Text>
-            {playlist.peer.isLocal ? (
+            {playlist.peer?.isLocal ? (
               <Text
                 variant="sm"
                 css={{ color: "$error", cursor: "pointer", ml: "$2" }}
-                onClick={e => {
+                onClick={(e) => {
                   e.preventDefault();
                   playlist.selection.playing
                     ? playlist.pause()
@@ -161,12 +169,12 @@ export const AdditionalRoomState = () => {
               <Text
                 variant="sm"
                 css={{ color: "$error", ml: "$2", cursor: "pointer" }}
-                onClick={e => {
+                onClick={(e) => {
                   e.preventDefault();
-                  playlist.setVolume(!playlist.track.volume ? 100 : 0);
+                  playlist.setVolume(!playlist.track?.volume ? 100 : 0);
                 }}
               >
-                {playlist.track.volume === 0 ? "Unmute" : "Mute"}
+                {playlist.track?.volume === 0 ? "Unmute" : "Mute"}
               </Text>
             )}
           </Dropdown.Item>
@@ -180,7 +188,7 @@ export const AdditionalRoomState = () => {
             <Text
               variant="sm"
               css={{ color: "$error", ml: "$2", cursor: "pointer" }}
-              onClick={e => {
+              onClick={(e) => {
                 e.preventDefault();
                 screenshareAudio.onToggle();
               }}
@@ -224,7 +232,7 @@ export const AdditionalRoomState = () => {
               <Text
                 variant="sm"
                 css={{ color: "$error", ml: "$2", cursor: "pointer" }}
-                onClick={e => {
+                onClick={(e) => {
                   e.preventDefault();
                   toggleWhiteboard();
                 }}

@@ -6,7 +6,7 @@ import { ParticipantList } from "../components/Header/ParticipantList";
 import { StreamingLanding } from "../components/Streaming/StreamingLanding";
 import { APP_DATA, SIDE_PANE_OPTIONS } from "../common/constants";
 
-const SidePane = ({ css = {} }) => {
+const SidePane: React.FC<{ css?: Record<string, any> }> = ({ css = {} }) => {
   const sidepane = useHMSStore(selectAppData(APP_DATA.sidePane));
   let ViewComponent;
   if (sidepane === SIDE_PANE_OPTIONS.PARTICIPANTS) {

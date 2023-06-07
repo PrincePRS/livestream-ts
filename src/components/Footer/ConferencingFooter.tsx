@@ -20,7 +20,6 @@ import { EmojiReaction } from "../EmojiReaction";
 import { LeaveRoom } from "../LeaveRoom";
 import MetaActions from "../MetaActions";
 import { MoreSettings } from "../MoreSettings/MoreSettings";
-import { PIP } from "../PIP";
 import { ScreenshareToggle } from "../ScreenShare";
 import { ScreenShareHintModal } from "../ScreenshareHintModal";
 import { ChatToggle } from "./ChatToggle";
@@ -66,7 +65,7 @@ const ScreenshareAudio = () => {
           active={!isAudioScreenshare}
           onClick={() => {
             if (amIScreenSharing) {
-              toggleScreenShare();
+              if (toggleScreenShare) toggleScreenShare();
             } else {
               setShowModal(true);
             }
@@ -112,7 +111,6 @@ export const ConferencingFooter = () => {
       <AppFooter.Center>
         <AudioVideoToggle />
         <ScreenshareToggle />
-        <PIP />
         <MoreSettings />
         <Flex
           align="center"

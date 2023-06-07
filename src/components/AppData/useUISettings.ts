@@ -23,9 +23,9 @@ import { APP_DATA, UI_SETTINGS } from "../../common/constants";
  *    console.log(val); // {isAudioOnly: false}
  * @param {string | undefined} uiSettingKey
  */
-export const useUISettings = (uiSettingKey: string) => {
+export const useUISettings = (uiSettingKey?: string) => {
   const uiSettings = useHMSStore(
-    selectAppDataByPath(APP_DATA.uiSettings, uiSettingKey)
+    selectAppDataByPath(APP_DATA.uiSettings, uiSettingKey ?? "")
   );
   return uiSettings;
 };
@@ -44,7 +44,7 @@ type UseSetUiSettingsResult = [any, SetValue];
  * @param {string} uiSettingKey
  */
 export const useSetUiSettings = (
-  uiSettingKey: string
+  uiSettingKey: string = ""
 ): UseSetUiSettingsResult => {
   const value = useUISettings(uiSettingKey);
   const setValue = useSetAppData({
@@ -98,7 +98,9 @@ export const useSubscribedNotifications = (notificationKey: string = "") => {
   return notificationPreference;
 };
 
-export const useSetSubscribedNotifications = (notificationKey: string) => {
+export const useSetSubscribedNotifications = (
+  notificationKey: string
+): UseSetUiSettingsResult => {
   const value = useSubscribedNotifications(notificationKey);
   const setValue = useSetAppData({
     key1: APP_DATA.subscribedNotifications,
@@ -131,7 +133,7 @@ export const useSetAppDataByKey = (
   const value = useHMSStore(selectAppData(appDataKey));
   const actions = useHMSActions();
   const setValue = useCallback(
-    (value: string) => {
+    (value?: string) => {
       actions.setAppData(appDataKey, value);
     },
     [actions, appDataKey]

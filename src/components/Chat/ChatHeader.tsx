@@ -17,12 +17,12 @@ import { useSidepaneToggle } from "../AppData/useSidepane";
 import { SIDE_PANE_OPTIONS } from "../../common/constants";
 
 export const ChatHeader: React.FC<{
-  selection;
-  selectorOpen;
-  onToggle;
-  onSelect;
-  role;
-  peerId;
+  selection: string;
+  selectorOpen: boolean;
+  onToggle: () => void;
+  onSelect: (value: Record<string, any>) => void;
+  role: string;
+  peerId: string;
 }> = React.memo(
   ({ selection, selectorOpen, onToggle, onSelect, role, peerId }) => {
     const [open, setOpen] = useState(false);

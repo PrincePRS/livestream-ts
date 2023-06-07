@@ -79,7 +79,7 @@ const initialAppData = {
 };
 
 interface AppDataProps {
-  appDetails: Record<string, any>;
+  appDetails: string;
   logo: string;
   recordingUrl: string;
   tokenEndpoint: string;
@@ -92,9 +92,7 @@ export const AppData: React.FC<AppDataProps> = React.memo(
     const isConnected = useHMSStore(selectIsConnectedToRoom);
     const sidePane = useSidepaneState();
     const resetSidePane = useSidepaneReset();
-    const [preferences = {}] = useUserPreferences(
-      UserPreferencesKeys.UI_SETTINGS
-    );
+    const { preference } = useUserPreferences(UserPreferencesKeys.UI_SETTINGS);
     const roleNames = useHMSStore(selectAvailableRoleNames);
     const rolesMap = useHMSStore(selectRolesMap);
     const localPeerRole = useHMSStore(selectLocalPeerRoleName);
@@ -116,7 +114,7 @@ export const AppData: React.FC<AppDataProps> = React.memo(
     }, [hmsActions]);
 
     useEffect(() => {
-      const uiSettings = preferences.uiSettings || {};
+      const uiSettings = preference?.uiSettings || {};
       const updatedSettings = {
         ...uiSettings,
         [UI_SETTINGS.uiViewMode]: isDefaultModeActiveSpeaker
@@ -124,7 +122,7 @@ export const AppData: React.FC<AppDataProps> = React.memo(
           : uiSettings.uiViewMode || UI_MODE_GRID,
       };
       hmsActions.setAppData(APP_DATA.uiSettings, updatedSettings, true);
-    }, [preferences.uiSettings, isDefaultModeActiveSpeaker, hmsActions]);
+    }, [preference?.uiSettings, isDefaultModeActiveSpeaker, hmsActions]);
 
     useEffect(() => {
       const appData = {
@@ -143,15 +141,15 @@ export const AppData: React.FC<AppDataProps> = React.memo(
     }, [appDetails, logo, recordingUrl, tokenEndpoint, hmsActions]);
 
     useEffect(() => {
-      if (!preferences.subscribedNotifications) {
+      if (!preference?.subscribedNotifications) {
         return;
       }
       hmsActions.setAppData(
         APP_DATA.subscribedNotifications,
-        preferences.subscribedNotifications,
+        preference?.subscribedNotifications,
         true
       );
-    }, [preferences.subscribedNotifications, hmsActions]);
+    }, [preference?.subscribedNotifications, hmsActions]);
 
     useEffect(() => {
       if (localPeerRole) {

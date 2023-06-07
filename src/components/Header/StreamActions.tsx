@@ -69,7 +69,7 @@ export const RecordingStatus = () => {
       !isServerRecordingOn,
       !isHLSRecordingOn,
       isBrowserRecordingOn,
-    ].every(value => !!value)
+    ].every((value) => !!value)
   ) {
     return null;
   }
@@ -150,7 +150,8 @@ const StartRecording = () => {
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Content align="end" sideOffset={8} css={{ w: "$64" }}>
-            <Text variant="body" css={{ color: "$textMedEmp" }}>
+            {/* <Text variant="body" css={{ color: "$textMedEmp" }}> */}
+            <Text variant="body1" css={{ color: "$textMedEmp" }}>
               Are you sure you want to end the recording?
             </Text>
             <Button
@@ -161,7 +162,7 @@ const StartRecording = () => {
               onClick={async () => {
                 try {
                   await hmsActions.stopRTMPAndRecording();
-                } catch (error) {
+                } catch (error: any) {
                   ToastManager.addToast({
                     title: error.message,
                     variant: "error",
@@ -221,7 +222,7 @@ const StartRecording = () => {
                 resolution: getResolution(resolution),
                 record: true,
               });
-            } catch (error) {
+            } catch (error: any) {
               if (error.message.includes("stream already running")) {
                 ToastManager.addToast({
                   title: "Recording already running",
@@ -257,12 +258,13 @@ export const StreamActions = () => {
         <RecordingStatus />
       </Flex>
       {isConnected && !isMobile ? <StartRecording /> : null}
-      {isConnected && (permissions.hlsStreaming || permissions.rtmpStreaming) && (
-        <Fragment>
-          <GoLiveButton />
-          <EndStream />
-        </Fragment>
-      )}
+      {isConnected &&
+        (permissions?.hlsStreaming || permissions?.rtmpStreaming) && (
+          <Fragment>
+            <GoLiveButton />
+            <EndStream />
+          </Fragment>
+        )}
     </Flex>
   );
 };
